@@ -8,43 +8,22 @@ import db
 
 
 class StockQuery:
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, sid):
+        self.sid = sid
         self.info = None
         self.init_db()
 
     def init_db(self):
-        host = "114.67.229.59"
+        host = "127.0.0.1"
         port = 3306
         db = "ais"
         user = "ais"
         passwd = "ais"
         self.db = db.DbUtils(host, port, db, user, passwd)
 
-    def get_stock_basic_info(self):
-        url = "http://qt.gtimg.cn/q={}".format(self.id)
-        rsp = requests.get(url)
-        return self.parse_qt_response(rsp.text)
-
-    def get_stock_ff_info(self):
-        url = "http://qt.gtimg.cn/q=ff_{}".format(self.id)
-        rsp = requests.get(url)
-        return self.parse_qt_response(rsp.text)
-
-    def parse_qt_response(self, info):
-        pattern = re.compile('s[h,z][0-9]{6}')
-        id = pattern.findall(info)
-        if not id:
-            print("stock {} query failed".format(self.id))
-            return
-        pattern = re.compile('"(.*)"')
-        str = pattern.findall(info)
-        s = str[0].split("~")
-        return s
-
     def get_stock_info(self):
-        basic_info = self.get_stock_basic_info()
-        ff_info = self.get_stock_ff_info()
+        basic_info = get_stock_basic_info(self.sid)
+        ff_info = get_stock_ff_info(self.sid)
 
         time = basic_info[30]
         s1 = ff_info[14].split("^")
@@ -53,7 +32,7 @@ class StockQuery:
         s4 = ff_info[17].split("^")
 
         self.info = {
-            "id": self.id,  # 股票代码
+            "sid": self.sid,  # 股票代码
             "name": basic_info[1],  # 股票名称
             "updated_date": time[:8],  # 更新日期
             "open_price": basic_info[5],  # 今日开盘价格
@@ -100,7 +79,31 @@ class StockQuery:
         if self.info:
             self.db_store_stock_info()
 
+
+def get_stock_basic_info(sid):
+    url = "http://qt.gtimg.cn/q={}".format(sid)
+    rsp = requests.get(url)
+    return parse_qt_response(sid, rsp.text)
+
+
+def get_stock_ff_info(sid):
+    url = "http://qt.gtimg.cn/q=ff_{}".format(sid)
+    rsp = requests.get(url)
+    return parse_qt_response(sid, rsp.text)
+
+
+def parse_qt_response(sid, info):
+    pattern = re.compile('s[h,z][0-9]{6}')
+    id = pattern.findall(info)
+    if not id:
+        return None
+    pattern = re.compile('"(.*)"')
+    str = pattern.findall(info)
+    s = str[0].split("~")
+    return s
+
+
 if __name__ == "__main__":
-    id = "sh603012"
-    s = StockQuery(id)
+    sid = "sh603012"
+    s = StockQuery(sid)
     s.get_stock_info()

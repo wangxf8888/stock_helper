@@ -1,7 +1,8 @@
 CREATE DATABASE IF NOT EXISTS `ais` DEFAULT CHARACTER SET utf8;
 
 CREATE TABLE IF NOT EXISTS `ais`.`stock` (
-    `id` VARCHAR(10) NOT NULL,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `sid` VARCHAR(10) NOT NULL,
     `name` VARCHAR(32) NOT NULL,
     `updated_date` date NOT NULL,
     `now_price` FLOAT(11,2) NOT NULL COMMENT '当前价格',

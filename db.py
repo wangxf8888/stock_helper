@@ -10,7 +10,7 @@ import stock_query
 
 table_spec = {
     "stock": (
-        "id", "name", "updated_date", "now_price", "open_price", "close_price",
+        "sid", "name", "updated_date", "now_price", "open_price", "close_price",
         "high_price", "low_price", "high_limit", "low_limit", "change", "rate",
         "volume", "amount", "swap_rate", "per", "amplitude", "market_value",
         "total_value", "qrr", "pbr", "buy_price", "buy_count", "sold_price",
@@ -267,13 +267,13 @@ class DbUtils:
 
 
 if __name__ == "__main__":
-    host = "114.67.229.59"
+    host = "127.0.0.1"
     port = 3306
     db = "ais"
     user = "ais"
     passwd = "ais"
     globalDb = DbUtils(host, port, db, user, passwd)
-    id = "sh600651"
+    id = "sz300761"
     s = stock_query.StockQuery(id)
     r = s.get_stock_info()
     print(r)
