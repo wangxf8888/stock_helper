@@ -9,7 +9,6 @@ import config
 
 # 所有股票代码
 sids = []
-db = stock.StockDB()
 
 
 def query_data(sid):
@@ -17,7 +16,7 @@ def query_data(sid):
     info = None
     upTime = 0
     downTime = 0
-    time = 0
+    nochangeTime = 0
     while True:
         t = int(time.strftime("%H%M%S"))
         day = time.strftime("%A")
@@ -41,52 +40,54 @@ def query_data(sid):
             else:
                 upTime = 0
                 downTime = 0
-                time += 1
+                nochangeTime += 1
                 info = sinfo
 
             if upTime >= 5:
+                upTime = 0
                 changePrice = float(sinfo["now_price"]) - float(refUpPrice)
                 changeRate = changePrice * 100 / float(refUpPrice)
-                print("{}:{}{}持续拉升，当前价格{}，上升幅度{:.2f}%".format(t,
-                                                              sinfo["name"],
-                                                              sinfo["sid"],
-                                                              sinfo[
-                                                                  "now_price"],
-                                                              changeRate))
+                print_information(t, sinfo)
             if downTime >= 5:
+                downTime = 0
                 changePrice = float(sinfo["now_price"]) - float(refDownPrice)
                 changeRate = changePrice * 100 / float(refDownPrice)
-                print("{}:{}{}持续下跌，当前价格{}，下跌幅度{:.2f}%".format(t,
-                                                              sinfo["name"],
-                                                              sinfo["sid"],
-                                                              sinfo[
-                                                                  "now_price"],
-                                                              changeRate))
-            if time >= 10:
-                print("{}:{}{}变化不大，当前价格{}，涨跌幅{:.2f}%".format(t,
-                                                              sinfo["name"],
-                                                              sinfo["sid"],
-                                                              sinfo[
-                                                                  "now_price"],
-                                                              sinfo["rate"]))
+                print_information(t, sinfo)
+            if nochangeTime >= 10:
+                nochangeTime = 0
+                print_information(t, sinfo)
         else:
             if status == True:
                 status = False
                 info = stock.get_stock_info(sid)
-                print("股市已休市 sid {}，今日涨跌幅 {} %".format(sid,
-                                                       info["rate"]))
+                print("股市已休市")
+                print_information(t, info)
         time.sleep(3)
+
+
+def print_information(t, stock):
+    if float(stock["rate"]) > 0:
+        print('\033[0;31;40m')
+    if float(stock["rate"]) < 0:
+        print('\033[0;32;40m')
+    if float(stock["rate"]) == 0:
+        print('\033[0;37;40m')
+    print("{}:{} {} 当前价格{} 涨跌幅{:.2f}%".format(t,
+                                              stock["name"],
+                                              stock["sid"],
+                                              float(stock["now_price"]),
+                                              float(stock["rate"])))
+    print('\033[0m')
 
 
 def get_valid_sids():
     sids = config.info["key_stocks"]
     print(sids)
+    return sids
 
 
 if __name__ == "__main__":
-    get_valid_sids()
-    sids.append("sz300432")
-    sids.append("sh600789")
+    sids = get_valid_sids()
     thread_list = []
 
     for sid in sids:

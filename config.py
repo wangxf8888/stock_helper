@@ -1,3 +1,3 @@
 info = {
-    "key_stocks" : ["sh600855", "sh002239"]
+    "key_stocks" : ["sh600855", "sz002239"]
 }
