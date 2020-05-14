@@ -17,8 +17,7 @@ def query_data(sid):
     info = None
     upTime = 0
     downTime = 0
-    upRate = 0
-    refPrice = 0
+    time = 0
     while True:
         t = int(time.strftime("%H%M%S"))
         day = time.strftime("%A")
@@ -42,6 +41,7 @@ def query_data(sid):
             else:
                 upTime = 0
                 downTime = 0
+                time += 1
                 info = sinfo
 
             if upTime >= 5:
@@ -62,7 +62,13 @@ def query_data(sid):
                                                               sinfo[
                                                                   "now_price"],
                                                               changeRate))
-
+            if time >= 10:
+                print("{}:{}{}变化不大，当前价格{}，涨跌幅{:.2f}%".format(t,
+                                                              sinfo["name"],
+                                                              sinfo["sid"],
+                                                              sinfo[
+                                                                  "now_price"],
+                                                              sinfo["rate"]))
         else:
             if status == True:
                 status = False

@@ -4,21 +4,6 @@
 import json
 import re
 import requests
-import db
-
-
-class StockDB():
-
-    def init_db(self):
-        host = "127.0.0.1"
-        port = 3306
-        db = "ais"
-        user = "ais"
-        passwd = "ais"
-        self.db = db.DbUtils(host, port, db, user, passwd)
-
-    def store_stock_info(self, info):
-        return self.db.create_stock(info)
 
 
 def get_stock_info(sid):
@@ -97,5 +82,4 @@ def parse_qt_response(info):
 
 if __name__ == "__main__":
     sid = "sh603012"
-    s = StockDB()
     get_stock_info(sid)
