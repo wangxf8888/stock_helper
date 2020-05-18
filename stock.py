@@ -7,6 +7,7 @@ import requests
 
 
 def get_stock_info(sid):
+    print("get stock info for sid = {}".format(sid))
     basic_info = get_stock_basic_info(sid)
     ff_info = get_stock_ff_info(sid)
 
