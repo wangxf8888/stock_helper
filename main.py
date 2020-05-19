@@ -71,9 +71,9 @@ def query_data(sid):
                 print_information(sinfo)
             if self_time > 10:
                 self_time = 0
-                for sid in self_sids:
-                    if sid["sid"] == info["sid"]:
-                        print_information(info)
+                for self_sid in self_sids:
+                    if self_sid["sid"] == info["sid"]:
+                        print_information(sinfo)
         else:
             if status == True:
                 status = False
