@@ -71,9 +71,7 @@ def query_data(sid):
                 print_information(sinfo)
             if self_time > 10:
                 self_time = 0
-                for self_sid in self_sids:
-                    if self_sid["sid"] == info["sid"]:
-                        print_information(sinfo)
+                print_information(sinfo)
         else:
             if status == True:
                 status = False
@@ -85,6 +83,7 @@ def query_data(sid):
 
 
 def print_information(stock):
+    global self_sids
     t = time.strftime("%H:%M:%S")
     b = "\033[0m"
     if float(stock["rate"]) > 0:
@@ -95,22 +94,25 @@ def print_information(stock):
         a = "\033[0;37;40m"
     if is_self_stock(stock["sid"]):
         for sid in self_sids:
+            print(sid)
             if sid["sid"] == stock["sid"]:
                 buy_price = sid["price"]
                 buy_count = sid["num"]
-        print("{}{}:{} {} 当前价/成本价{}/{}  盈利{:.2f}{}"
+        print("{}{}:{} {} 当前价/成本价{}/{}  涨跌幅{:.2f}% 盈利{:.2f}{}"
               .format(a,
                       t,
                       stock["name"],
                       stock["sid"],
                       float(stock["now_price"]),
                       float(buy_price),
+                      float(stock["rate"]),
                       float(float(stock["now_price"]) - float(
                           buy_price)) * buy_count,
                       b))
     else:
         print("{}{}:{} {} 当前价格{} 涨跌幅{:.2f}%{}"
-              .format(t,
+              .format(a,
+                      t,
                       stock["name"],
                       stock["sid"],
                       float(stock[

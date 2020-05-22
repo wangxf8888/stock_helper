@@ -1,10 +1,11 @@
 info = {
-    "self_stocks": [
+    "self_stocks" : [
         {
-            "sid": "sh600127",
-            "num": 17800,
-            "price": 11.379
+            "sid": "sh603032",
+            "num": 12000,
+            "price": 18.355
         }
     ],
-    "key_stocks": ["sh600855", "sz002239"]
+    "key_stocks" : ["sz002382"]
 }
+
